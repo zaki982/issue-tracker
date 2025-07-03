@@ -1,0 +1,143 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          Int       @id @default(autoincrement())
+  name        String
+  email       String    @unique
+  password    String?   // nullable for OAuth users
+  role        Role      @default(REPORTER)
+  avatarUrl   String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  issuesReported Issue[]    @relation("IssuesReported")
+  issuesAssigned Issue[]    @relation("IssuesAssigned")
+  comments    Comment[]
+  attachments Attachment[]
+  histories   IssueHistory[]
+  watching    Watcher[]
+}
+
+enum Role {
+  ADMIN
+  DEVELOPER
+  TESTER
+  REPORTER
+}
+
+model Issue {
+  id            Int           @id @default(autoincrement())
+  title         String        @db.VarChar(255)
+  description   String        @db.Text
+  stepsToReproduce String?    @db.Text
+  priority      Priority      @default(MEDIUM)
+  severity      Severity      @default(MINOR)
+  type          IssueType     @default(BUG)
+  product       String?
+  version       String?
+  status        Status        @default(OPEN)
+  resolution    Resolution?   // nullable until resolved
+  assigneeId    Int?
+  assignee      User?         @relation("IssuesAssigned", fields: [assigneeId], references: [id])
+  reporterId    Int
+  reporter      User          @relation("IssuesReported", fields: [reporterId], references: [id])
+  attachments   Attachment[]
+  comments      Comment[]
+  histories     IssueHistory[]
+  watchers      Watcher[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+enum Status {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+  REOPENED
+}
+
+enum Priority {
+  CRITICAL
+  HIGH
+  MEDIUM
+  LOW
+}
+
+enum Severity {
+  CRITICAL
+  MAJOR
+  MINOR
+  TRIVIAL
+}
+
+enum IssueType {
+  BUG
+  FEATURE
+  TASK
+  IMPROVEMENT
+}
+
+enum Resolution {
+  FIXED
+  WONTFIX
+  DUPLICATE
+  INCOMPLETE
+  CANNOT_REPRODUCE
+  OTHER
+}
+
+model Attachment {
+  id        Int      @id @default(autoincrement())
+  url       String
+  filename  String
+  issueId   Int
+  issue     Issue    @relation(fields: [issueId], references: [id])
+  uploadedById Int
+  uploadedBy User    @relation(fields: [uploadedById], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  content   String   @db.Text
+  issueId   Int
+  issue     Issue    @relation(fields: [issueId], references: [id])
+  authorId  Int
+  author    User     @relation(fields: [authorId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model IssueHistory {
+  id          Int      @id @default(autoincrement())
+  issueId     Int
+  issue       Issue    @relation(fields: [issueId], references: [id])
+  changedById Int
+  changedBy   User     @relation(fields: [changedById], references: [id])
+  fromStatus  Status
+  toStatus    Status
+  note        String?
+  timestamp   DateTime @default(now())
+}
+
+model Watcher {
+  id      Int   @id @default(autoincrement())
+  issueId Int
+  issue   Issue @relation(fields: [issueId], references: [id])
+  userId  Int
+  user    User  @relation(fields: [userId], references: [id])
+}
+

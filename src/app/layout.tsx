@@ -1,16 +1,45 @@
-import "./globals.css";
-import NavBar from "./NavBar";
+import './globals.css';
+import { Inter } from 'next/font/google';
+import { getServerSession } from 'next-auth';
+import { authOptions } from './api/auth/[...nextauth]/route';
+import { SessionProvider } from '@/components/providers/session-provider';
+import { ThemeProvider } from '@/components/providers/theme-provider';
+import { Toaster } from '@/components/ui/toaster';
+import NavBar from './NavBar';
 
-export default function RootLayout({
+const inter = Inter({ subsets: ['latin'] });
+
+export const metadata = {
+  title: 'Issue Tracker',
+  description: 'Track and manage software issues efficiently',
+};
+
+export default async function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
+  const session = await getServerSession(authOptions);
+
   return (
-    <html lang="en">
-      <body>
-        <NavBar />
-        <main>{children}</main>
+    <html lang="en" suppressHydrationWarning>
+      <body className={inter.className}>
+        <SessionProvider session={session}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <div className="min-h-screen bg-background">
+              <NavBar />
+              <main className="container mx-auto px-4 py-8">
+                {children}
+              </main>
+            </div>
+            <Toaster />
+          </ThemeProvider>
+        </SessionProvider>
       </body>
     </html>
   );

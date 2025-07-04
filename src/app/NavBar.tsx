@@ -43,7 +43,8 @@ const NavBar = () => {
         title: 'Signed out successfully',
         variant: 'default',
       });
-    } catch (error) {
+    } catch (err) {
+      console.error('Sign out error:', err);
       toast({
         title: 'Error signing out',
         description: 'There was an error signing out. Please try again.',

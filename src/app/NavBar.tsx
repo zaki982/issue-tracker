@@ -18,6 +18,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { toast } from '@/components/ui/use-toast';
 import { cn } from '@/lib/utils';
+import { ThemeToggle } from '@/components/theme-toggle';
 
 const NavBar = () => {
   const pathname = usePathname();
@@ -86,7 +87,9 @@ const NavBar = () => {
         </div>
       </div>
 
-      <div className="flex items-center space-x-4">
+      <div className="flex items-center space-x-2">
+        <ThemeToggle />
+        
         {status === 'authenticated' ? (
           <>
             <Button 

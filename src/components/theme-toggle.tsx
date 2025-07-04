@@ -131,9 +131,10 @@ export function ThemeToggle() {
           <DropdownMenuItem 
             onClick={(e) => handleThemeChange('light', e)}
             onKeyDown={(e) => handleKeyDown(e, 'light')}
-            className={`flex items-center ${theme === 'light' ? 'bg-accent' : ''}`}
-            role="menuitem"
-            tabIndex={0}
+            className={`flex items-center ${theme === 'light' ? 'bg-accent' : 'hover:bg-accent/50'}`}
+            role="menuitemradio"
+            aria-checked={theme === 'light'}
+            tabIndex={-1}
             data-state={theme === 'light' ? 'checked' : 'unchecked'}
           >
             <span className="flex-1">Light</span>
@@ -148,9 +149,10 @@ export function ThemeToggle() {
           <DropdownMenuItem 
             onClick={(e) => handleThemeChange('dark', e)}
             onKeyDown={(e) => handleKeyDown(e, 'dark')}
-            className={`flex items-center ${theme === 'dark' ? 'bg-accent' : ''}`}
-            role="menuitem"
-            tabIndex={0}
+            className={`flex items-center ${theme === 'dark' ? 'bg-accent' : 'hover:bg-accent/50'}`}
+            role="menuitemradio"
+            aria-checked={theme === 'dark'}
+            tabIndex={-1}
             data-state={theme === 'dark' ? 'checked' : 'unchecked'}
           >
             <span className="flex-1">Dark</span>
@@ -165,9 +167,10 @@ export function ThemeToggle() {
           <DropdownMenuItem 
             onClick={(e) => handleThemeChange('system', e)}
             onKeyDown={(e) => handleKeyDown(e, 'system')}
-            className={`flex items-center ${theme === 'system' ? 'bg-accent' : ''}`}
-            role="menuitem"
-            tabIndex={0}
+            className={`flex items-center ${theme === 'system' ? 'bg-accent' : 'hover:bg-accent/50'}`}
+            role="menuitemradio"
+            aria-checked={theme === 'system'}
+            tabIndex={-1}
             data-state={theme === 'system' ? 'checked' : 'unchecked'}
           >
             <span className="flex-1">System</span>

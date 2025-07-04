@@ -3,7 +3,7 @@ import { Inter } from 'next/font/google';
 import { getServerSession } from 'next-auth';
 import { authOptions } from './api/auth/[...nextauth]/route';
 import { SessionProvider } from '@/components/providers/session-provider';
-import { ThemeProvider } from '@/components/providers/theme-provider';
+import { ThemeProvider } from '@/hooks/use-theme';
 import { Toaster } from '@/components/ui/toaster';
 import NavBar from './NavBar';
 
